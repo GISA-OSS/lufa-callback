@@ -286,7 +286,7 @@ class CallbackModule(CallbackBase):
             "ansible_host": self.get_ansible_host(host.get_vars()),
             "module": task.action,
             "state": "started",
-            "result_dump": json.dumps(dict()),
+            "result_dump": json.dumps({}),
         }
 
         self.send_data("/task_callbacks", data_task_callback, requests.post)
