@@ -53,7 +53,7 @@ DEBUG = False
 
 class MockRequest:
     def __init__(self, file):
-        self.file = open(file, "a")    # noqa: SIM115
+        self.file = open(file, "a")  # noqa: SIM115
 
     def post(self, url: str, json: dict, headers: dict[str, str]) -> None:
         print(f"POST: {url} {hide_secret_vars(json, True)}", file=self.file)
@@ -134,9 +134,7 @@ class CallbackModule(CallbackBase):
         super().__init__()
 
     def set_options(self, task_keys=None, var_options=None, direct=None) -> None:
-        super().set_options(
-            task_keys=task_keys, var_options=var_options, direct=direct
-        )
+        super().set_options(task_keys=task_keys, var_options=var_options, direct=direct)
 
         self.endpoint_uris = [
             item.strip() for item in self.get_option("endpoint_uris").split(",")
