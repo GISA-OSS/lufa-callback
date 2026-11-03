@@ -1,15 +1,15 @@
 import json
-from typing import cast, Protocol, Callable, TypedDict
+from collections.abc import Callable
+from typing import Protocol, TypedDict, cast
 
-from ansible.playbook.task import Task
-from ansible.playbook.play import Play
+import requests
+from ansible.inventory.data import Host, InventoryData
 from ansible.playbook import Playbook
+from ansible.playbook.play import Play
+from ansible.playbook.task import Task
 from ansible.plugins.callback import CallbackBase
 from ansible.utils.fqcn import add_internal_fqcns
 from ansible.vars.manager import VariableManager
-from ansible.inventory.data import InventoryData, Host
-import requests
-
 
 DOCUMENTATION = """
     callback: lufa
@@ -53,7 +53,7 @@ DEBUG = False
 
 class MockRequest:
     def __init__(self, file):
-        self.file = open(file, "a")
+        self.file = open(file, "a")  # noqa: SIM115
 
     def post(self, url: str, json: dict, headers: dict[str, str]) -> None:
         print(f"POST: {url} {hide_secret_vars(json, True)}", file=self.file)
@@ -96,6 +96,7 @@ BAD_SECRET_WORDS = [
     "pass",
     "token",
     "key",
+    "keys",
     "auth",
     "secret",
     "vault",
@@ -131,12 +132,10 @@ class CallbackModule(CallbackBase):
         # Not in AWX -> dont send data
         self.in_awx = True  # Will be false, if no tower_job_id is set
 
-        super(CallbackModule, self).__init__()
+        super().__init__()
 
     def set_options(self, task_keys=None, var_options=None, direct=None) -> None:
-        super(CallbackModule, self).set_options(
-            task_keys=task_keys, var_options=var_options, direct=direct
-        )
+        super().set_options(task_keys=task_keys, var_options=var_options, direct=direct)
 
         self.endpoint_uris = [
             item.strip() for item in self.get_option("endpoint_uris").split(",")
@@ -286,7 +285,7 @@ class CallbackModule(CallbackBase):
             "ansible_host": self.get_ansible_host(host.get_vars()),
             "module": task.action,
             "state": "started",
-            "result_dump": json.dumps(dict()),
+            "result_dump": json.dumps({}),
         }
 
         self.send_data("/task_callbacks", data_task_callback, requests.post)
@@ -393,7 +392,6 @@ class CallbackModule(CallbackBase):
 
     def v2_playbook_on_start(self, playbook: Playbook) -> None:
         self.playbook_path = cast(str, playbook._file_name)
-        pass
 
     def v2_runner_retry(self, result: AnsibleResult) -> None:
         pass
@@ -415,7 +413,7 @@ def hide_secret_vars(extra_vars: dict, replace_secrets: bool = False) -> dict:
     """Delete sensitive data in extra_vars."""
     copy = dict(extra_vars)
 
-    for key in extra_vars.keys():
+    for key in extra_vars:
         for keyword in BAD_SECRET_WORDS:
             if keyword in [word.lower() for word in key.split("_")] or keyword == key:
                 if replace_secrets:

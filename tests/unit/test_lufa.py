@@ -1,4 +1,4 @@
-from lufa import CallbackModule, hide_secret_vars, BAD_SECRET_WORDS
+from lufa import BAD_SECRET_WORDS, CallbackModule, hide_secret_vars
 
 
 class TestGetAnsibleHost:
@@ -32,6 +32,9 @@ class TestHideSecretVars:
 
     def test_dictionary_key_password_is_removed(self):
         assert hide_secret_vars({"password": 42}) == {}
+
+    def test_keys_is_removed(self):
+        assert hide_secret_vars({"xxx_license_keys": 42}) == {}
 
     def test_dictionary_key_secret_is_removed(self):
         assert hide_secret_vars({"secret": 42}) == {}
