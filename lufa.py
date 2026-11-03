@@ -53,7 +53,7 @@ DEBUG = False
 
 class MockRequest:
     def __init__(self, file):
-        self.file = open(file, "a")
+        self.file = open(file, "a")    # noqa: SIM115
 
     def post(self, url: str, json: dict, headers: dict[str, str]) -> None:
         print(f"POST: {url} {hide_secret_vars(json, True)}", file=self.file)
