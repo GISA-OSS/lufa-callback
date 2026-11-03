@@ -1,4 +1,4 @@
-from lufa import CallbackModule, hide_secret_vars, BAD_SECRET_WORDS
+from lufa import BAD_SECRET_WORDS, CallbackModule, hide_secret_vars
 
 
 class TestGetAnsibleHost:
