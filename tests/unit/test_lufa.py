@@ -33,6 +33,9 @@ class TestHideSecretVars:
     def test_dictionary_key_password_is_removed(self):
         assert hide_secret_vars({"password": 42}) == {}
 
+    def test_keys_is_removed(self):
+        assert hide_secret_vars({"xxx_license_keys": 42}) == {}
+
     def test_dictionary_key_secret_is_removed(self):
         assert hide_secret_vars({"secret": 42}) == {}
 

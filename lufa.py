@@ -96,6 +96,7 @@ BAD_SECRET_WORDS = [
     "pass",
     "token",
     "key",
+    "keys",
     "auth",
     "secret",
     "vault",
