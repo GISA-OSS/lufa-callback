@@ -5,10 +5,10 @@
   tasks:
     - name: "Block"
       block:
-        - name: "Change"
+        - name: "Outer"
           fail:
             msg: "Boom"
       rescue:
-        - name: "Change"
+        - name: "Inner"
           fail:
             msg: "Boom, again"
