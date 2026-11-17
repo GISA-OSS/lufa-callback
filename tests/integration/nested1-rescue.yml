@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  become: false
+  name: "Example"
+  tasks:
+    - name: "Block"
+      block:
+        - name: "Outer"
+          fail:
+            msg: "Boom"
+      rescue:
+        - name: "Middle"
+          block:
+            - name: "Middle"
+              command: 'true'
+              changed_when: true
+          rescue:
+            - name: "Inner"
+              command: 'true'
+              changed_when: true
