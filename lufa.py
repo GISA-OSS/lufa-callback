@@ -194,7 +194,11 @@ class CallbackModule(CallbackBase):
         task = result._task
         if hasattr(task, "_parent") and task._parent:
             parent = task._parent
-            if hasattr(parent, "rescue") and parent.rescue and result._task._uuid not in [r._uuid for r in parent.rescue]:
+            if (
+                hasattr(parent, "rescue")
+                and parent.rescue
+                and result._task._uuid not in [r._uuid for r in parent.rescue]
+            ):
                 state = "rescued"
 
         data_task_callback = {
